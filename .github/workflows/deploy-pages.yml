@@ -26,9 +26,12 @@ jobs:
       - name: Build direct HTML
         run: |
           set -e
-          base64 -d payload0.txt | gzip -d > index.html
+          base64 -d payload0.txt > payload.gz
+          gzip -dc payload.gz > index.html 2>/dev/null || true
           test -s index.html
           grep -q 'Римско право' index.html
+          grep -q 'const ALL' index.html
+          grep -q '</html>' index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site
