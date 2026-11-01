@@ -23,6 +23,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Build direct HTML
+        run: |
+          set -e
+          base64 -d payload0.txt | gzip -d > index.html
+          test -s index.html
+          grep -q 'Римско право' index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site
