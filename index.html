@@ -2,36 +2,29 @@
 <html lang="sr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Римско право — Flash картице</title>
-<style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f5f7;color:#20242a;display:grid;place-items:center;min-height:100vh;margin:0}#status{padding:24px;text-align:center;color:#68707a}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Римско право — Флеш картице</title>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--border:#e5e7eb;--accent:#2563eb;--good:#16a34a;--bad:#dc2626;--warn:#d97706}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.wrap{max-width:900px;margin:auto;padding:16px}.top{position:sticky;top:0;z-index:5;background:rgba(243,244,246,.96);backdrop-filter:blur(8px);padding-bottom:12px}.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:0 4px 16px rgba(0,0,0,.05)}h1{font-size:22px;margin:0 0 12px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.controls>*{min-width:0}select,input,button{font:inherit;border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff}button{cursor:pointer;font-weight:650}button:hover{filter:brightness(.98)}.wide{grid-column:1/-1}.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:14px}.card{margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px;min-height:330px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.06)}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:700}.q{font-size:clamp(22px,4vw,32px);line-height:1.3;font-weight:750;margin:25px 0}.answer{font-size:18px;line-height:1.65;white-space:pre-wrap;background:#f9fafb;border-radius:14px;padding:16px;border:1px solid var(--border)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.actions button{flex:1}.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}.important{background:#fffbeb;border-color:#fde68a;color:#92400e}.hidden{display:none}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:12px}.bar{height:100%;background:#2563eb;width:0}.end{text-align:center;padding:35px 10px}.small{font-size:13px;color:var(--muted)}@media(max-width:600px){.controls{grid-template-columns:1fr}.wide{grid-column:auto}.wrap{padding:10px}.card{min-height:360px;padding:18px}}
+</style>
 </head>
 <body>
-<div id="status">Учитавање картица…</div>
+<div class="wrap">
+<div class="top">
+<div class="panel">
+<h1>Римско право — Флеш картице</h1>
+<div class="controls">
+<select id="period"><option value="all">Сви периоди</option></select>
+<input id="search" placeholder="Претрага питања...">
+<button id="shuffle">🔀 Промешај</button>
+<button id="importantOnly">☆ Само важна</button>
+<button id="reset">↻ Нова рунда</button>
+</div>
+<div class="stats"><span id="counter"></span><span id="wrongCount"></span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+</div></div>
+<div id="app"></div>
+</div>
 <script>
-(async()=>{
- try{
-  const r=await fetch('./payload0.txt?'+Date.now(),{cache:'no-store'});
-  if(!r.ok) throw new Error('payload '+r.status);
-  const b64=(await r.text()).trim();
-  const bin=atob(b64);
-  const bytes=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-  const ds=new DecompressionStream('gzip');
-  const html=await new Response(new Blob([bytes]).stream().pipeThrough(ds)).text();
-  const doc=new DOMParser().parseFromString(html,'text/html');
-  document.title=doc.title;
-  document.head.innerHTML=doc.head.innerHTML;
-  document.body.innerHTML=doc.body.innerHTML;
-  const scripts=[...doc.querySelectorAll('script')];
-  for(const oldScript of scripts){
-    if(oldScript.textContent.trim()) (0,eval)(oldScript.textContent);
-  }
- }catch(e){
-  document.body.innerHTML='<div id="status">Није могуће учитати картице. Освежи страницу за тренутак.</div>';
-  console.error(e);
- }
-})();
-</script>
-</body>
-</html>
+const ALL = 
