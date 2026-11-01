@@ -18,11 +18,17 @@
   const bytes=new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
   const ds=new DecompressionStream('gzip');
-  const stream=new Blob([bytes]).stream().pipeThrough(ds);
-  const html=await new Response(stream).text();
-  document.open();document.write(html);document.close();
+  const html=await new Response(new Blob([bytes]).stream().pipeThrough(ds)).text();
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  document.title=doc.title;
+  document.head.innerHTML=doc.head.innerHTML;
+  document.body.innerHTML=doc.body.innerHTML;
+  const scripts=[...doc.querySelectorAll('script')];
+  for(const oldScript of scripts){
+    if(oldScript.textContent.trim()) (0,eval)(oldScript.textContent);
+  }
  }catch(e){
-  document.getElementById('status').innerHTML='Није могуће учитати картице. Освежи страницу за тренутак.';
+  document.body.innerHTML='<div id="status">Није могуће учитати картице. Освежи страницу за тренутак.</div>';
   console.error(e);
  }
 })();
